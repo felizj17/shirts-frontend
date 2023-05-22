@@ -1,0 +1,30 @@
+.shorts-card{
+    border: solid black 2px;
+    margin-bottom: 20px;
+    border-radius:10px;
+    background-color: rgb(172, 176, 187);
+    padding:5px;
+    width:100%;
+    color:black;
+}
+.buttons{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.read-btn{
+    background-color: blueviolet;
+    color:white;
+    border:none;
+    border-radius: 5px;
+    padding:5px;
+    margin-left:10px;
+}
+.btn{
+    border:none;
+    background-color: transparent;
+    margin:10px;
+}
+.btn:hover{
+    cursor: pointer;
+}

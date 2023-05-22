@@ -1,16 +1,16 @@
 import {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios'
 
-export default function NewTweet() {
+export default function NewTweet({user}) {
   const API = process.env.REACT_APP_API_URL
   const navigate = useNavigate()
+  const {userId} = useParams()
   const [error, setError] = useState({})
   const [tweet, setTweet] = useState({
-    name: '',
-    tweeter_at: '',
+    _title: '',
+    read_time: '',
     body: '',
-    user_id: 0,
   })
   const handleTextChange = e => {
     setTweet({
@@ -20,32 +20,30 @@ export default function NewTweet() {
   }
   const handleSubmit = e => {
     e.preventDefault()
+    const newShort={
+      title:tweet._title,
+      body:tweet.body,
+      read_time:tweet.read_time,
+      user_id:userId
+    }
     axios
-      .post(`${API}/tweets`, tweet)
-      .then(_ => navigate('/'))
+      .post(`${API}/tweets`, newShort)
+      .then(_ => navigate(`/${userId}/shorts`))
       .catch(e => setError(e))
   }
   return (
     <form onSubmit={handleSubmit}>
-      <button onClick={() => navigate('/')}>Back to feed</button>
-      <label htmlFor='name'>Name</label>
+      <button onClick={() => navigate(`/${userId}/shorts`)}>Back to feed</button>
+      <label htmlFor='_title'>Title:</label>
       <input
         type='text'
-        id='name'
-        name='name'
-        placeholder='just until we get this sorted'
+        id='_title'
+        name='_title'
+        placeholder='Into the Deeps'
         onChange={handleTextChange}
         required
       />
-      <label htmlFor='tweeter_at'>your @</label>
-      <input
-        type='text'
-        id='tweetr_at'
-        name='tweeter_at'
-        placeholder='@killerMike'
-        onChange={handleTextChange}
-        required
-      />
+      <label htmlFor='body'>Short:</label>
       <textarea
         id='body'
         name='body'
@@ -53,14 +51,16 @@ export default function NewTweet() {
         onChange={handleTextChange}
         required
       />
+       <label htmlFor='read_time'>Read time:</label>
       <input
         type='number'
-        id='user_id'
-        name='user_id'
-        value={tweet.user_id}
+        id='read_time'
+        name='read_time'
+        placeholder='2'
         onChange={handleTextChange}
+        required
       />
-      <button onClick={() => navigate('/')}>Cancel</button>
+      <button onClick={() => navigate(`/${userId}/shorts`)}>Cancel</button>
       <button type='submit'>Tweet</button>
     </form>
   )

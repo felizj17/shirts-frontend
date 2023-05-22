@@ -4,14 +4,14 @@ import axios from 'axios'
 
 export default function EditTweet() {
   const API = process.env.REACT_APP_API_URL
-  const {id} = useParams()
+  const {userId, id} = useParams()
   const navigate = useNavigate()
   const [error, setError] = useState({})
   const [tweet, setTweet] = useState({
-    name: '',
-    tweeter_at: '',
+    title: '',
+    read_time: '',
     body: '',
-    user_id: 0,
+    user_id:'',
   })
   useEffect(()=>{
     axios.get(`${API}/tweets/${id}`)
@@ -27,30 +27,29 @@ export default function EditTweet() {
     e.preventDefault()
     axios
       .put(`${API}/tweets/${id}`, tweet)
-      .then(_ => navigate('/'))
+      .then(_ => navigate(`/${userId}/shorts`))
       .catch(e => setError(e))
   }
   return (
     <form onSubmit={handleSubmit}>
-      <button onClick={() => navigate('/')}>Back to feed</button>
+      <button onClick={() => navigate(`/${userId}/shorts`)}>Back to feed</button>
       <label htmlFor='name'>Name</label>
       <input
         type='text'
-        id='name'
-        name='name'
+        id='_title'
+        name='_title'
         placeholder='just until we get this sorted'
         onChange={handleTextChange}
-        value={tweet.name}
+        value={tweet.title}
         required
       />
-      <label htmlFor='tweeter_at'>your @</label>
+      <label htmlFor='read_time'>Read Time:</label>
       <input
-        type='text'
-        id='tweetr_at'
-        name='tweeter_at'
-        placeholder='@killerMike'
+        type='number'
+        id='read_time'
+        name='read_time'
         onChange={handleTextChange}
-        value={tweet.tweeter_at}
+        value={tweet.read_time}
         required
       />
       <textarea
@@ -61,14 +60,7 @@ export default function EditTweet() {
         value={tweet.body}
         required
       />
-      <input
-        type='number'
-        id='user_id'
-        name='user_id'
-        value={tweet.user_id}
-        onChange={handleTextChange}
-      />
-      <button onClick={() => navigate('/')}>Cancel</button>
+      <button onClick={() => navigate(`/${userId}/shorts`)}>Cancel</button>
       <button type='submit'>Tweet</button>
     </form>
   )

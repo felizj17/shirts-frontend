@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios'
 
-import './tweet.css'
+import './short.css'
 
-export default function Tweet({tweet}) {
+export default function Shorts({shorts}) {
   const API = process.env.REACT_APP_API_URL
+  const {userId} = useParams()
   const months = [
     'Jan',
     'Feb',
@@ -24,11 +25,11 @@ export default function Tweet({tweet}) {
   const [date, setDate] = useState({})
   const [edited, setEdited] = useState({})
   useEffect(() => {
-    setDate(dateFormat(tweet.created_at))
-    if (tweet.edited_at) {
-      setEdited(dateFormat(tweet.edited_at))
+    setDate(dateFormat(shorts.created_at))
+    if (shorts.edited_at) {
+      setEdited(dateFormat(shorts.edited_at))
     }
-  }, [tweet])
+  }, [shorts])
   const dateFormat = date => {
     const theDate = date.toString().split('T')[0].split('-')
     const theTime = date.toString().split('T')[1].split(':')
@@ -51,23 +52,37 @@ export default function Tweet({tweet}) {
   }
   const handleDelete = e => {
     //modal to confirm deletion
-    axios.delete(`${API}/tweets/${e.target.id}`).then(_=>navigate('/'))
+    axios
+      .delete(`${API}/tweets/${e.target.id}`)
+      .then(_ => navigate(`/${userId}/shorts`))
   }
   return (
-    <div className='tweet-card'>
-      <aside>
-        <span>{tweet.name}</span>
-        <p>{tweet.tweeter_at}</p>
-      </aside>
-      <p>{tweet.body}</p>
+    <div className='shorts-card'>
+      <aside><h3>{shorts.title}</h3></aside>
       <p>
         {date.date} {date.time}GMT{' '}
-        {tweet.edited_at ? `edited at ${edited.date} ${edited.time}` : null}
+        {shorts.edited_at ? `| Edited at ${edited.date} ${edited.time}` : null}
       </p>
-      <button onClick={() => navigate(`/edit/${tweet.id}`)}>✏️</button>
-      <button id={tweet.id} onClick={handleDelete}>
-        ❌
-      </button>
+      <span>
+        <p>Read time: {shorts.read_time} min</p>
+      </span>
+      <aside className='buttons'>
+        <section>
+          <button className='read-btn' onClick={() => navigate(`/${userId}/shorts/${shorts.id}`)}>
+            Read
+          </button>
+        </section>
+        <section>
+          <button className='btn'
+            onClick={() => navigate(`/${userId}/shorts/edit/${shorts.id}`)}
+          >
+            ✏️
+          </button>
+          <button className='btn' id={shorts.id} onClick={handleDelete}>
+            ❌
+          </button>
+        </section>
+      </aside>
     </div>
   )
 }

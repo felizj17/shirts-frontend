@@ -5,7 +5,9 @@ import Navbar from './components/navbar/Navbar'
 import Register from './views/auth0/Register'
 import NewTweet from './views/forms/NewTweet'
 import EditTweet from './views/forms/EditTweet'
+import NotFound from './views/NotFound'
 import './App.css'
+import Short from './views/singleview/Short'
 
 const ProtectedRoute = ({user, redirectPath = '/landing'}) => {
   if (!user) {
@@ -20,7 +22,7 @@ function App() {
   const [user, setUser] = useState()
   const handleSignIn = authUser => {
     setUser(authUser)
-    navigate('/')
+    navigate(`/${authUser.id}/shorts`)
   }
   const handleSignOut = () => {
     setUser()
@@ -39,10 +41,12 @@ function App() {
         <Routes>
           <Route path='/landing' element={<Register />} />
           <Route element={<ProtectedRoute user={user} />}>
-            <Route path='/' element={<Home signedIn={user} />} />
-            <Route path='/new' element={<NewTweet />} />
-            <Route path='/edit/:id' element={<EditTweet />} />
+            <Route path='/:userId/shorts' element={<Home user={user} />} />
+            <Route path='/:userId/shorts/:id' element={<Short user={user} />} />
+            <Route path='/:userId/shorts/edit/:id' element={<EditTweet user={user} />} />
+            <Route path='/:userId/shorts/new' element={<NewTweet user={user}/>} />
           </Route>
+          <Route path='*' element={<NotFound/>}/>
         </Routes>
       </main>
     </div>

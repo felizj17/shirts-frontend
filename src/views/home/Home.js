@@ -1,10 +1,10 @@
-import Feed from "../../components/tweets/Feed"
-export default function Home({signedIn}) {
+import Feed from "../../components/shorts/Feed"
+export default function Home({user}) {
   return (
     <div className='home-page'>
-      {signedIn ? (
+      {user ? (
         <section>
-          <Feed user={signedIn} />
+          <Feed user={user} />
         </section>
       ) : null}
     </div>
