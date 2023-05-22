@@ -8,20 +8,18 @@ export default function Feed({user}){
     const {userId} = useParams()
     const navigate = useNavigate()
     const [shorts, setShorts] = useState([])
-    const [errors, setErrors] = useState({})
     useEffect(()=>{
         axios.get(`${API}/users/${userId}/shorts/`)
         .then(res=>setShorts(res.data))
-        .catch(e=>setErrors(e))
-    },[location])
+        .catch(e=>console.log(e))
+    },[location,userId])
     return (
         <section className='feed'>
-            {/* {errors.error&&<ErrorMessage error={errors.error}/>} */}
             {shorts.length>0?
             shorts.map(short=>(
                 <Shorts key={`tweet-${short.id}`} shorts={short}/>
             )):<h1>You have no shorts yet, <Link to={`/${user.id}/shorts/new`}>Add one</Link> </h1>}
-            {/* <button onClick={()=>navigate(`/${userId}/shorts/new`)} >Add Short</button> */}
+            <button onClick={()=>navigate(`/${userId}/shorts/new`)} >Add Short</button>
         </section>
     )
 }

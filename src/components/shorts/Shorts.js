@@ -25,32 +25,33 @@ export default function Shorts({shorts}) {
   const [date, setDate] = useState({})
   const [modal, setModal] = useState(false)
   const [edited, setEdited] = useState({})
+  
   useEffect(() => {
+    const dateFormat = date => {
+      const theDate = date.toString().split('T')[0].split('-')
+      const theTime = date.toString().split('T')[1].split(':')
+      if (+theTime[0] > 12) {
+        return {
+          date: `${months[+theDate[1] - 1]} ${theDate[2]}, ${theDate[0]}`,
+          time: `${+theTime[0] - 12}:${theTime[1]} `,
+        }
+      } else if (+theTime[0] === 0) {
+        return {
+          date: `${months[+theDate[1] - 1]} ${theDate[2]}, ${theDate[0]}`,
+          time: `12:${theTime[1]} `,
+        }
+      } else {
+        return {
+          date: `${months[+theDate[1] - 1]} ${theDate[2]}, ${theDate[0]}`,
+          time: `${+theTime[0]}:${theTime[1]}`,
+        }
+      }
+    }
     setDate(dateFormat(shorts.created_at))
     if (shorts.edited_at) {
       setEdited(dateFormat(shorts.edited_at))
     }
   }, [shorts])
-  const dateFormat = date => {
-    const theDate = date.toString().split('T')[0].split('-')
-    const theTime = date.toString().split('T')[1].split(':')
-    if (+theTime[0] > 12) {
-      return {
-        date: `${months[+theDate[1] - 1]} ${theDate[2]}, ${theDate[0]}`,
-        time: `${+theTime[0] - 12}:${theTime[1]} `,
-      }
-    } else if (+theTime[0] === 0) {
-      return {
-        date: `${months[+theDate[1] - 1]} ${theDate[2]}, ${theDate[0]}`,
-        time: `12:${theTime[1]} `,
-      }
-    } else {
-      return {
-        date: `${months[+theDate[1] - 1]} ${theDate[2]}, ${theDate[0]}`,
-        time: `${+theTime[0]}:${theTime[1]}`,
-      }
-    }
-  }
   const handleDelete = () => {
     if (modal) {
       axios
