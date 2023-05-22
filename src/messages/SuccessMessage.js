@@ -1,4 +1,4 @@
-export default function ErrorMessage({message}){
+export default function SuccessMessage({message}){
     return (
         <aside>
             <p>Success: {message}</p>

@@ -1,40 +1,54 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import axios from 'axios'
 import './auth.css'
+import ErrorMessage from '../../messages/ErrorMessage'
+import SuccessMessage from '../../messages/SuccessMessage'
 
 export default function Register() {
-    const API = process.env.REACT_APP_API_URL
-    const [user, setUser] = useState({
-        email:'',
-        username:'',
-        _at:'',
-        password:'',
-        confirm:''
-    })
-    const [error, setError] = useState()
-    const [message, setMessage] = useState()
-const handleTextChange = e=>{
+  const API = process.env.REACT_APP_API_URL
+  const [user, setUser] = useState({
+    email: '',
+    username: '',
+    _at: '',
+    password: '',
+    confirm: '',
+  })
+  const [error, setError] = useState()
+  const [message, setMessage] = useState()
+  const handleTextChange = e => {
     setUser({
-        ...user,
-        [e.target.name]:e.target.value
+      ...user,
+      [e.target.name]: e.target.value,
     })
-}
+  }
   const handleSubmit = e => {
     e.preventDefault()
-    if(user.password ===user.confirm){
-        const newUser = {
-            email:user.email,
-            username:user.username,
-            _at:user._at,
-            password:user.password
-        }
-        axios.post(`${API}/users/signup`, newUser).then(res=>{
-            setMessage(res.message)
-            setTimeout(()=>{setMessage()})
+    if (user.password === user.confirm) {
+      const newUser = {
+        email: user.email,
+        username: user.username,
+        _at: `@${user._at}`,
+        password: user.password,
+      }
+      axios
+        .post(`${API}/users/signup`, newUser)
+        .then(res => {
+          setMessage(res.data.message)
+          setTimeout(() => {
+            setMessage()
+          },3000)
         })
-    }else{
-        setError({error:"Passwords do not match, please try again. "})
-        setTimeout(()=>{setError()},3000)
+        .catch(err => {
+            console.log(err)
+
+          setError(err.response.data.error)
+          setTimeout(()=>{setError()},3000)
+        })
+    } else {
+      setError('Passwords do not match, please try again. ')
+      setTimeout(() => {
+        setError()
+      }, 3000)
     }
   }
   return (
@@ -63,7 +77,6 @@ const handleTextChange = e=>{
         id='username'
         name='username'
         onChange={handleTextChange}
-
       />
       <br />
       <label className='reg-label' htmlFor='_at'>
@@ -105,7 +118,11 @@ const handleTextChange = e=>{
         required
       />
       <br />
-      <button className='reg-btn' type='submit'>Create Account</button>
+      <button className='reg-btn' type='submit'>
+        Create Account
+      </button>
+      {error&&<ErrorMessage error={error}/>}
+      {message&&<SuccessMessage message={message}/>}
     </form>
   )
 }

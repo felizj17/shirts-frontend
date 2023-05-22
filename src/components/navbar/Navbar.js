@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
-import { useNavigate, useLocation } from "react-router-dom"
+import {  useLocation } from "react-router-dom"
 import Login from "../../views/auth0/Login"
 import './navbar.css'
-export default function Navbar({signedIn, handleSignIn}) {
+export default function Navbar({user, handleSignIn, handleSignOut}) {
     const location = useLocation()
-    const navigate = useNavigate()
     const [show, setShow] = useState(true)
     useEffect(()=>{
         if(location.pathname === '/new'){
@@ -16,10 +15,10 @@ export default function Navbar({signedIn, handleSignIn}) {
       <h1 id='title'>Shorts</h1>
       <aside className='login-btns'>
         {}
-        {!signedIn?
+        {!user?
           (<>
-            <Login />
-          </>):show&&<button onClick={()=>navigate('/new')}>new tweet</button>
+            <Login handleSignin={handleSignIn}/>
+          </>):show&&<button onClick={handleSignOut}>Logout</button>
         }
       </aside>
     </nav>
