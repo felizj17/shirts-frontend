@@ -34,7 +34,7 @@ export default function EditTweet() {
       <button className='back' onClick={() => navigate(`/${userId}/shorts`)}>
         Back to feed
       </button>
-      <form onSubmit={handleSubmit}>
+      <form className='form' onSubmit={handleSubmit}>
         <br />
         <label className='short-label' htmlFor='name'>
           Title:

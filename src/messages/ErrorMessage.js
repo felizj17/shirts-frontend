@@ -1,6 +1,6 @@
 export default function ErrorMessage({error}){
     return (
-        <aside>
+        <aside className="error">
             <p>Error: {error}</p>
         </aside>
     )

@@ -57,3 +57,19 @@ font-weight: bold;
   display:flex;
   justify-content: space-between;
 }
+.success{
+  background-color: green;
+  color: white;
+  font-size: large;
+  font-weight: 500;
+  padding-left:10px;
+
+}
+.error{
+  background-color: red;
+  width: 60%;
+  color: white;
+  font-size: large;
+  font-weight: 500;
+  padding-left:10px;
+}

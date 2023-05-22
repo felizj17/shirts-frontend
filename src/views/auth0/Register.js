@@ -9,7 +9,7 @@ export default function Register() {
   const [user, setUser] = useState({
     email: '',
     username: '',
-    _at: '',
+    shorty: '',
     password: '',
     confirm: '',
   })
@@ -27,22 +27,33 @@ export default function Register() {
       const newUser = {
         email: user.email,
         username: user.username,
-        _at: `@${user._at}`,
+        shorty: `@${user.shorty}`,
         password: user.password,
       }
       axios
         .post(`${API}/users/signup`, newUser)
         .then(res => {
           setMessage(res.data.message)
+          setUser({
+            email: '',
+            username: '',
+            shorty: '',
+            password: '',
+            confirm: '',
+          })
           setTimeout(() => {
             setMessage()
-          },3000)
+          }, 3000)
         })
         .catch(err => {
-            console.log(err)
-
-          setError(err.response.data.error)
-          setTimeout(()=>{setError()},3000)
+          if (err.response) {
+              setError(err.response.data.error)
+            } else {
+              setError(err.message)
+          }
+          setTimeout(() => {
+            setError()
+          }, 3000)
         })
     } else {
       setError('Passwords do not match, please try again. ')
@@ -63,6 +74,7 @@ export default function Register() {
         required
         id='email'
         name='email'
+        value={user.email}
         onChange={handleTextChange}
       />
       <br />
@@ -76,10 +88,11 @@ export default function Register() {
         required
         id='username'
         name='username'
+        value={user.username}
         onChange={handleTextChange}
       />
       <br />
-      <label className='reg-label' htmlFor='_at'>
+      <label className='reg-label' htmlFor='shorty'>
         Shorty:
       </label>
       <br />
@@ -87,8 +100,9 @@ export default function Register() {
         className='reg-input'
         type='text'
         required
-        id='_at'
-        name='_at'
+        id='shorty'
+        name='shorty'
+        value={user.shorty}
         onChange={handleTextChange}
       />
       <br />
@@ -102,6 +116,7 @@ export default function Register() {
         id='password'
         name='password'
         onChange={handleTextChange}
+        value={user.password}
         required
       />
       <br />
@@ -114,6 +129,7 @@ export default function Register() {
         type='password'
         id='confirm'
         name='confirm'
+        value={user.confirm}
         onChange={handleTextChange}
         required
       />
@@ -121,8 +137,8 @@ export default function Register() {
       <button className='reg-btn' type='submit'>
         Create Account
       </button>
-      {error&&<ErrorMessage error={error}/>}
-      {message&&<SuccessMessage message={message}/>}
+      {error && <ErrorMessage error={error} />}
+      {message && <SuccessMessage message={message} />}
     </form>
   )
 }
