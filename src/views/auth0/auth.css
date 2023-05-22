@@ -1,0 +1,13 @@
+.reg-input{
+    width:100%;
+    height:30px;
+    margin-bottom:30px;
+    margin-top: 10px;
+}
+.reg-label{
+margin-bottom: 20px;
+}
+.reg-btn{
+    /* position: relative; */
+    float: right;
+}
