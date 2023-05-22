@@ -1,0 +1,64 @@
+form {
+  border: solid white 2px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(172, 176, 187);
+  color: blueviolet;
+}
+textarea {
+  width: 80%;
+  height: 50vh;
+  resize: none;
+  display: block;
+  margin-bottom: 20px;
+}
+.short-label {
+  font-size: larger;
+  font-weight: 600;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+}
+.read-label {
+  display: inline-flex;
+  font-size: larger;
+  font-weight: 600;
+}
+.read {
+  display: inline-flex;
+  width: 20%;
+  height:25px;
+  margin-left: 10px;
+  margin-bottom: 20px;
+}
+.short-input {
+  margin-bottom: 20px;
+  display: block;
+  height: 30px;
+  width: 80%;
+}
+.form-btns {
+  margin: 20px 0;
+  width: 75%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.form-btn {
+  border: none;
+  border-radius: 5px;
+  font-size: medium;
+  font-weight: 500;
+  padding: 5px;
+}
+.cancel {
+  background-color: gray;
+  color: white;
+}
+.post {
+  background-color: green;
+  color: white;
+}

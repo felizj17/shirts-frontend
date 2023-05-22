@@ -16,7 +16,6 @@ export default function Feed({user}){
     },[location])
     return (
         <section className='feed'>
-            {console.log(shorts)}
             {/* {errors.error&&<ErrorMessage error={errors.error}/>} */}
             {shorts&&
             shorts.map(short=>(

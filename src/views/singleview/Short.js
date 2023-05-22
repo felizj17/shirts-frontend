@@ -1,27 +1,35 @@
 import {useEffect, useState} from 'react'
 import axios from 'axios'
-import {useParams} from 'react-router-dom'
+import {useParams, useNavigate} from 'react-router-dom'
+import Modal from '../../components/modal/Modal'
 
 export default function Short() {
+    const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ]
   const API = process.env.REACT_APP_API_URL
   const {userId, id} = useParams()
+  const navigate = useNavigate()
   const [short, setShort] = useState()
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ]
+  const [modal, setModal] = useState(false)
   const [date, setDate] = useState({})
   const [edited, setEdited] = useState()
+  useEffect(() => {
+    axios
+      .get(`${API}/users/${userId}/shorts/${id}`)
+      .then(res => setShort(res.data))
+  }, [])
   useEffect(() => {
     if (short) {
       setDate(dateFormat(short.created_at))
@@ -50,17 +58,37 @@ export default function Short() {
       }
     }
   }
-  useEffect(() => {
-    axios
-      .get(`${API}/users/${userId}/shorts/${id}`)
-      .then(res => setShort(res.data))
-  }, [])
+  const handleDelete = e => {
+    if(modal){
+        axios
+          .delete(`${API}/tweets/${short.id}`)
+          .then(_ => navigate(`/${userId}/shorts`))
+    }else{
+        setModal(true)
+    }
+  }
+  
   return (
     <div>
+         <button className='back' onClick={() => navigate(`/${userId}/shorts`)}>Back to feed</button>
+         {modal&&<Modal handleDelete={handleDelete} short={short} handleClose={()=>setModal(false)}/>}
       {short && (
         <div>
           <h1>{short.title}</h1>
           <span>Posted: {date.date} {date.time} {'\t'} {edited?`| Edited at ${edited.date} ${edited.time}`:null}</span>
+          <section>
+            <p>{short.body}</p>
+          </section>
+          <section className="single-btns">
+          <button className='edit-btn'
+            onClick={() => navigate(`/${userId}/shorts/edit/${short.id}`)}
+          >
+        EDIT
+          </button>
+          <button className='delete-btn' id={short.id} onClick={handleDelete}>
+            DELETE
+          </button>
+        </section>
         </div>
       )}
     </div>

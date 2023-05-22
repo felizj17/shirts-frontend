@@ -1,11 +1,12 @@
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import axios from 'axios'
-
+import Modal from '../modal/Modal'
 import './short.css'
 
 export default function Shorts({shorts}) {
   const API = process.env.REACT_APP_API_URL
+  const navigate = useNavigate()
   const {userId} = useParams()
   const months = [
     'Jan',
@@ -21,8 +22,8 @@ export default function Shorts({shorts}) {
     'Nov',
     'Dec',
   ]
-  const navigate = useNavigate()
   const [date, setDate] = useState({})
+  const [modal, setModal] = useState(false)
   const [edited, setEdited] = useState({})
   useEffect(() => {
     setDate(dateFormat(shorts.created_at))
@@ -50,15 +51,28 @@ export default function Shorts({shorts}) {
       }
     }
   }
-  const handleDelete = e => {
-    //modal to confirm deletion
-    axios
-      .delete(`${API}/tweets/${e.target.id}`)
-      .then(_ => navigate(`/${userId}/shorts`))
+  const handleDelete = () => {
+    if (modal) {
+      axios
+        .delete(`${API}/tweets/${shorts.id}`)
+        .then(_ => navigate(`/${userId}/shorts`))
+    } else {
+      setModal(true)
+    }
   }
   return (
     <div className='shorts-card'>
-      <aside><h3>{shorts.title}</h3></aside>
+      {modal && (
+        <Modal
+          handleDelete={handleDelete}
+          short={shorts}
+          handleClose={() => setModal(false)}
+        />
+      )}
+
+      <aside>
+        <h3>{shorts.title}</h3>
+      </aside>
       <p>
         {date.date} {date.time}GMT{' '}
         {shorts.edited_at ? `| Edited at ${edited.date} ${edited.time}` : null}
@@ -68,12 +82,16 @@ export default function Shorts({shorts}) {
       </span>
       <aside className='buttons'>
         <section>
-          <button className='read-btn' onClick={() => navigate(`/${userId}/shorts/${shorts.id}`)}>
+          <button
+            className='read-btn'
+            onClick={() => navigate(`/${userId}/shorts/${shorts.id}`)}
+          >
             Read
           </button>
         </section>
         <section>
-          <button className='btn'
+          <button
+            className='btn'
             onClick={() => navigate(`/${userId}/shorts/edit/${shorts.id}`)}
           >
             ✏️
